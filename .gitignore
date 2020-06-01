@@ -1,0 +1,21 @@
+# Exclude content in the config folder
+config/*
+!config/.gitkeep
+!config/*.example
+
+# Exclude content in the logs folder
+logs/*
+!logs/.gitkeep
+
+# Vscode folder
+.vscode
+
+# Virtual environment folder
+.venv
+
+# Jupyter notebooks
+.ipynb_checkpoints
+*.ipynb
+
+# Python garbage
+__pycache__

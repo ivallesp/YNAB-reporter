@@ -1,0 +1,8 @@
+[flake8]
+# E203: Space before ":" (black conflict)
+# E731: Lambda assignment3
+# W503: Line break before binary operator
+ignore = E203,E731,W503
+
+# Match maximum line length enforced by `black` formatter by default
+max-line-length = 120

@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "ynab-reporting"
+version = "0.1.0"
+description = "Reporting tool to deep dive into my personal finance"
+authors = ["ivallesp <ivanvallesperez@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6.1"
+ynab_client = "^0.1.8"
+pandas = "^1.0.1"
+openpyxl = "^3.0.3"
+toml = "^0.10.1"
+tenacity = "^6.2.0"
+matplotlib = "^3.2.1"
+
+[tool.poetry.dev-dependencies]
+ipython = "^7.12.0"
+ipykernel = "^5.1.4"
+flake8 = "^3.7.9"
+black = {version = "^19.10b0", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
