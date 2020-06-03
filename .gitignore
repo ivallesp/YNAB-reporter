@@ -7,6 +7,10 @@ config/*
 logs/*
 !logs/.gitkeep
 
+# Exclude content in the logs folder
+assets/*
+!assets/template.tex
+
 # Vscode folder
 .vscode
 
@@ -19,3 +23,9 @@ logs/*
 
 # Python garbage
 __pycache__
+
+# Mac garbage
+.DS_Store
+
+# CSV Files
+*.csv
