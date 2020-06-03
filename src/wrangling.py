@@ -1,8 +1,11 @@
+import calendar
+from datetime import datetime
+
 import pandas as pd
 
-from src.config import load_ynab_config
 from src.api import fetch_transactions, get_ynab_client
-from src.data_tools import cartesian_pair, cartesian_multiple
+from src.config import load_ynab_config
+from src.data_tools import cartesian_multiple, cartesian_pair
 
 
 def get_ynab_dataset(min_date=None, max_date=None):
@@ -22,8 +25,22 @@ def get_ynab_dataset(min_date=None, max_date=None):
 
 
 def calculate_daily_balances(df):
+    """Calculate daily balances from the YNAB dataset, by cumulative summing the
+    daily inflows and outflows, at account, category and date level.
+
+    Args:
+        df (pd.DataFrame): YNAB data frame with all the transactions.
+
+    Returns:
+        pd.DataFrame: data frame with the daily balances at account and category
+        level.
+    """
     pks = ["account_name", "category_name"]
-    df_date = pd.DataFrame({"date": pd.date_range(df.date.min(), df.date.max())})
+    # Extend it until end of month
+    max_date = df.date.max()
+    eom_day = calendar.monthrange(max_date.year, max_date.month)[1]
+    eom_date = datetime(max_date.year, max_date.month, eom_day)
+    df_date = pd.DataFrame({"date": pd.date_range(df.date.min(), eom_date)})
     df_pks = cartesian_multiple(df[pks], pks)
     df_base = cartesian_pair(df_date, df_pks)
     df = df_base.merge(df[pks + ["date", "amount"]], how="left").fillna(0)
