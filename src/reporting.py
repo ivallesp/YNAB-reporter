@@ -38,7 +38,7 @@ def calculate_financial_snapshot(year, month):
     df = df[lambda d: d.date == eom_date]
     # Aggregate at account level
     df = df.groupby(["account_name"]).amount.sum()
-    # Sort accounts by decreasing balabce
+    # Sort accounts by decreasing balance
     df = df.sort_values(ascending=False).reset_index()
     # Remove accounts with 0€
     df = df[lambda d: d.amount != 0]
