@@ -38,7 +38,7 @@ def calculate_financial_snapshot(year, month):
     df = df[lambda d: d.date == eom_date]
     # Aggregate at account level
     df = df.groupby(["account_name"]).amount.sum()
-    # Sort accounts by decreasing balance
+    # Sort accounts by decreasing balabce
     df = df.sort_values(ascending=False).reset_index()
     # Remove accounts with 0€
     df = df[lambda d: d.amount != 0]
@@ -73,6 +73,34 @@ def generate_evolution_plot():
     fig.tight_layout()
     return fig, ax
 
+
+def calculate_monthly_flows(year, month):
+    # Load data
+    df = get_ynab_dataset()
+    # Filter out the transfers
+    df = df[df.transfer_transaction_id.isnull()]
+    # Add month column
+    month_col = pd.Series(np.array(MONTHS)[df.date.dt.month.values - 1], index=df.index)
+    month_col = month_col + " " + df.date.dt.year.astype(str)
+    df["month"] = month_col.values
+    # Calculate inflows and outflows
+    df["inflow"] = 0
+    df["outflow"] = 0
+    inflow_f = lambda d: d.amount > 0
+    outflow_f = lambda d: d.amount <= 0
+    df.loc[inflow_f, "inflow"] = df.loc[inflow_f, "amount"]
+    df.loc[outflow_f, "outflow"] = -df.loc[outflow_f, "amount"]
+    # Aggregate at month level
+    agg_dict = {"date": np.max, "inflow": np.sum, "outflow": np.sum}
+    df = df.groupby("month").agg(agg_dict)
+    df = df.sort_values(by="date").reset_index()
+    # Calculate savings
+    df["savings"] = df.inflow - df.outflow
+    # Filter and arrange columns
+    df = df[["month", "inflow", "outflow", "savings"]]
+    # Remove first row (initial balance is counted as inflow)
+    df = df.iloc[1:]
+    return df
 
 def generate_latex_report(year, month):
     with open("assets/template.tex", "r") as f:
