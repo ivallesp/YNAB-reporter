@@ -4,6 +4,7 @@ from datetime import datetime
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 from src.wrangling import calculate_daily_balances, get_ynab_dataset
 
@@ -126,20 +127,30 @@ def calculate_financial_evolution(year, month):
     df.columns = ["Month", "Inflow", "Outflow", "Savings", "Amount"]
     return df
 
-def generate_latex_report(year, month):
-    with open("assets/template.tex", "r") as f:
-        template = f.read()
-    df_financial_snapshot = calculate_financial_snapshot(year=year, month=month)
 
+def generate_latex_report(year, month):
     locale.setlocale(locale.LC_ALL, "en_us.utf-8")
     float_format = lambda x: locale.format("%.2f", x, grouping=True)
-    financial_report = df_financial_snapshot.to_latex(
+    with open("assets/template.tex", "r") as f:
+        template = f.read()
+
+    title = f"Financial report – {MONTHS[month-1]} {year}"
+
+    df_financial_snapshot = calculate_financial_snapshot(year=year, month=month)
+    financial_snapshot = df_financial_snapshot.to_latex(
         index=False, float_format=float_format
     )
 
-    title = f"Financial report – {MONTHS[month-1]} {year}"
-    template = template.format(financial_snapshot=financial_report, title=title)
+    df_financial_evolution = calculate_financial_evolution(year=year, month=month)
+    financial_evolution = df_financial_evolution.to_latex(
+        index=False, float_format=float_format
+    )
 
+    template = template.format(
+        title=title,
+        financial_snapshot=financial_snapshot,
+        financial_evolution=financial_evolution,
+    )
     # + monthly inflows and outflows, with initial and final balance and savings
     # + biggest transactions
 
