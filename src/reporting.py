@@ -102,6 +102,30 @@ def calculate_monthly_flows(year, month):
     df = df.iloc[1:]
     return df
 
+
+def calculate_financial_evolution(year, month):
+    # Load data and calculate daily balances
+    df_ynab = get_ynab_dataset()
+    df = calculate_daily_balances(df=df_ynab)
+    # Get the end of month balances
+    df = df[lambda d: d.date.dt.is_month_end]
+    # Aggregate at date level
+    df = df.groupby(["date"]).amount.sum()
+    # Sort accounts by decreasing balance
+    df = df.sort_values(ascending=False).reset_index()
+    # Add month column
+    month_col = pd.Series(np.array(MONTHS)[df.date.dt.month - 1])
+    month_col = month_col + " " + df.date.dt.year.astype(str)
+    df["month"] = month_col
+    # Calculate flows
+    df_flows = calculate_monthly_flows(year=year, month=month)
+    df = df.merge(df_flows, how="left")
+    # Filter and arrange columns
+    df = df[["month", "inflow", "outflow", "savings", "amount"]]
+    # Add fancy column names
+    df.columns = ["Month", "Inflow", "Outflow", "Savings", "Amount"]
+    return df
+
 def generate_latex_report(year, month):
     with open("assets/template.tex", "r") as f:
         template = f.read()
