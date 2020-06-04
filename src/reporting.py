@@ -7,6 +7,11 @@ import pandas as pd
 
 from src.wrangling import calculate_daily_balances, get_ynab_dataset
 
+import matplotlib as mpl
+
+colors = [plt.cm.Set2(x) for x in range(10)]
+mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=colors)
+
 MONTHS = [
     "January",
     "February",
