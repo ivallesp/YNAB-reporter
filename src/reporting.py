@@ -66,9 +66,10 @@ def calculate_financial_snapshot(year, month):
     return df
 
 
-def generate_evolution_plot():
+def generate_evolution_plot(year, month):
     df_ynab = get_ynab_dataset()
     df = calculate_daily_balances(df=df_ynab)
+    df = df.loc[(df.date.dt.year <= year) & (df.date.dt.month <= month)]
     # Aggregate at account level
     df = df.groupby(["date", "account_name"]).amount.sum().reset_index()
     # Pivot the account dimension
@@ -117,6 +118,7 @@ def generate_evolution_plot():
 def calculate_monthly_flows(year, month):
     # Load data
     df = get_ynab_dataset()
+    df = df.loc[(df.date.dt.year <= year) & (df.date.dt.month <= month)]
     # Filter out the transfers
     df = df[df.transfer_transaction_id.isnull()]
     # Add month column
@@ -147,6 +149,7 @@ def calculate_financial_evolution(year, month):
     # Load data and calculate daily balances
     df_ynab = get_ynab_dataset()
     df = calculate_daily_balances(df=df_ynab)
+    df = df.loc[(df.date.dt.year <= year) & (df.date.dt.month <= month)]
     # Get the end of month balances
     df = df[lambda d: d.date.dt.is_month_end]
     # Aggregate at date level
@@ -196,7 +199,7 @@ def generate_latex_report(year, month):
     # Change colors
     # Add grid
     # Set xlim
-    fig, ax = generate_evolution_plot()
+    fig, ax = generate_evolution_plot(year=year, month=month)
     fig.savefig("assets/evolution.eps")
 
     with open("assets/report.tex", "w") as f:
