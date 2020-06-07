@@ -7,7 +7,10 @@ from src.api import fetch_transactions, get_ynab_client
 from src.config import load_ynab_config
 from src.data_tools import cartesian_multiple, cartesian_pair
 
+from functools import lru_cache
 
+
+@lru_cache(maxsize=0)
 def get_ynab_dataset(min_date=None, max_date=None):
     ynab_cli = get_ynab_client()
     ynab_conf = load_ynab_config()["ynab"]
