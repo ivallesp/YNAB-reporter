@@ -21,9 +21,15 @@ COLORS = [
     "ff9d58",
     "536b38",
 ]
+
+# Use seaborn style
 plt.style.use("seaborn")
+# Set colors
 mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=COLORS)
+# Enable the legend frame
 mpl.rcParams["legend.frameon"] = "True"
+# Prevent matplotlib from cutting labels at export time
+mpl.rcParams.update({"figure.autolayout": True})
 
 MONTHS = [
     "January",
