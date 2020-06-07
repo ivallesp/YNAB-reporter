@@ -155,6 +155,63 @@ def generate_evolution_plot(year, month):
     return fig, ax
 
 
+def generate_categories_detail_plot(year, month):
+    df = get_ynab_dataset()
+    df = df.loc[(df.date.dt.year <= year) & (df.date.dt.month <= month)]
+    df = df[df.transfer_transaction_id.isnull()]
+    df["month"] = df.date.dt.month
+    df["year"] = df.date.dt.year
+    df = df.groupby(["year", "month", "category_name"]).amount.sum()
+    df = df.sort_values()[year, month]
+    # Remove the income category. We want to analyse the rest
+    df = df.drop("Immediate Income SubCategory")
+    # Separate the category names from the values
+    cats = df.index.tolist()
+    vals = df.values
+    # Shorten category names by removing the annotations between parentheses
+    cats = [x.split("(")[0].strip() for x in cats]
+    # Distinguish possitive and negative values with colors
+    colors = ["#" + COLORS[0] + "FF" if x < 0 else "#" + COLORS[5] + "FF" for x in vals]
+    # Calculate the histories for every account
+    yticks_freq = 250  # Frequency of the y ticks
+    # Get the max value for the Y axis
+    top = yticks_freq * math.ceil((-vals).max() / yticks_freq)
+    bot = yticks_freq * math.floor((-vals).min() / yticks_freq)
+    # Generate a new figure
+    fig = plt.figure(figsize=[10, 2.5])
+    ax = plt.gca()
+    # Plot the bars
+    bars = plt.bar(cats, -vals, color=colors)
+    # Set the frequency of the yticks
+    ax.set_yticks(np.arange(0, top + 1, yticks_freq))
+    # Add a horizontal line at zero
+    ax.axhline(0, color="k", linewidth=0.7)
+    # Background to white
+    ax.set_facecolor((1, 1, 1))
+    # Gridlines to grey
+    ax.grid(color="#DDDDDD", linestyle="-", linewidth=0.7)
+    # ax.grid(False)
+    for bar in bars:
+        height = bar.get_height()
+        perc = (
+            str(round(100 * height / -vals[vals < 0].sum(), 1)) + "%"
+            if height > 0
+            else ""
+        )
+        plt.text(
+            bar.get_x() + bar.get_width() / 2.0,
+            height + 20,
+            "%s" % perc,
+            ha="center",
+            va="bottom",
+        )
+    plt.ylim(bot, top)
+    # Make the layout tight (lower margins)
+    fig.tight_layout()
+    ax.xaxis.set_tick_params(rotation=30)
+    return fig, ax
+
+
 def calculate_monthly_flows(year, month):
     # Load data
     df = get_ynab_dataset()
