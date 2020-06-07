@@ -3,6 +3,7 @@ import locale
 from datetime import datetime
 
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import pandas as pd
 import numpy as np
 
@@ -10,8 +11,19 @@ from src.wrangling import calculate_daily_balances, get_ynab_dataset
 
 import matplotlib as mpl
 
-colors = [plt.cm.Set2(x) for x in range(10)]
-mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=colors)
+COLORS = [
+    "da4450",
+    "643a71",
+    "91acca",
+    "b964a4",
+    "0d6b96",
+    "06a77d",
+    "ff9d58",
+    "536b38",
+]
+plt.style.use("seaborn")
+mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=COLORS)
+mpl.rcParams["legend.frameon"] = "True"
 
 MONTHS = [
     "January",
@@ -65,13 +77,40 @@ def generate_evolution_plot():
     for col in df.columns:
         if df[col].max() == 0:
             df = df.drop(col, axis=1)
-    # Calculate the histories for every account
+    # Sort columns by average amount
+    df = df[df.sum(axis=0).sort_values(ascending=False).index]
+    # Build list of histories per account
     histories = list(zip(*df.values.clip(0, None).tolist()))
+    # Calculate the histories for every account
+    yticks_freq = 5000  # Frequency of the y ticks
+    # Get the max value for the Y axis
+    top = yticks_freq * (df.values.sum(axis=1).max() / yticks_freq).round()
+    # Generate a new figure
     fig = plt.figure(figsize=(10, 2.5))
     ax = plt.gca()
+    # Plot the histories
     ax.stackplot(df.index.tolist(), *histories, labels=df["amount"].columns)
-    ax.legend(loc="upper left")
+    # Plot the legend
+    ax.legend(loc="upper left", facecolor="white")
+    # Add the grid on top the graph
+    ax.set_axisbelow(False)
+    ax.grid(which="both", linestyle="--", linewidth=0.7)
+    # Configure the axis
+    ax.set_yticks(np.arange(0, top + 1, yticks_freq))
+    ax.set_ylim(0, top)
+    years = mdates.YearLocator()
+    months = mdates.MonthLocator()
+    monthsFmt = mdates.DateFormatter("%b")
+    yearsFmt = mdates.DateFormatter("\n\n%Y")  # add some space for the year label
+    ax.xaxis.set_minor_locator(months)
+    ax.xaxis.set_minor_formatter(monthsFmt)
+    ax.xaxis.set_major_locator(years)
+    ax.xaxis.set_major_formatter(yearsFmt)
+    # Make the layout tight (lower margins)
     fig.tight_layout()
+    # Rotate 90 degrees the minor labels in the X axis
+    labels = ax.get_xticklabels(minor=True)
+    ax.set_xticklabels(labels, minor=True, rotation=90)
     return fig, ax
 
 
