@@ -6,38 +6,70 @@
 \usepackage{{amssymb}}
 \usepackage{{graphicx}}
 \usepackage{{booktabs}}
-\usepackage[margin=0.5in]{{geometry}}
+\usepackage[a4paper,left=1cm,right=1cm,top=1cm,bottom=1cm]{{geometry}}
 \date{{}}
-\title{{{title}}}
+\title{{\vspace{{-2.5em}}{title}}}
 
 \begin{{document}}
-
+% Title
 \maketitle
+\thispagestyle{{empty}}
+\vspace{{-50pt}}
+
+\section*{{Summary of the month}}
+% Subsection: current position
+\subsection*{{\textsc{{Current position}}}}\vspace{{5pt}}
+\begin{{minipage}}[t]{{0.7\textwidth}}
+{financial_snapshot}
+\end{{minipage}}
+\begin{{minipage}}[t]{{0.3\textwidth}}
+{last_movements}
+\end{{minipage}}
+
+
+
+
+% Subsection: categories breakdown
+\subsection*{{\textsc{{Categories breakdown}}}}\vspace{{5pt}}
 
 \begin{{center}}
-\textbf{{\textsc{{Balance evolution}}}}\vspace{{5pt}}
+\includegraphics[width=1\linewidth]{{categories}}
+\end{{center}}
 
+
+
+% Top Inflow and outflow transactions
+\vspace{{-2.5em}}
+\subsection*{{\textsc{{Top Inflow and Outflow transactions}}}}\vspace{{5pt}}
+\begin{{minipage}}[t]{{0.5\textwidth}}
+{{\small
+{top_inflows}
+}}
+\end{{minipage}}
+\begin{{minipage}}[t]{{0.5\textwidth}}
+{{\small
+{top_outflows}
+}}
+\end{{minipage}}
+
+
+
+
+% Section: history
+\section*{{History}}
+% Subsection: evolution of the balance
+\subsection*{{\textsc{{Balance evolution}}}}\vspace{{5pt}}
+
+\begin{{center}}
 \includegraphics[width=1\linewidth]{{evolution}}
 \end{{center}}
 
+% Subsection: Balances
+\subsection*{{\textsc{{Balances}}}}\vspace{{5pt}}
 \begin{{center}}
-\textbf{{\textsc{{Current position}}}}\vspace{{5pt}}
-\setlength{{\tabcolsep}}{{20pt}}
-
-{financial_snapshot}
-\end{{center}}
-
-
-\begin{{center}}
-\textbf{{\textsc{{Inflows and Outflows over time}}}}\vspace{{5pt}}
 \setlength{{\tabcolsep}}{{20pt}}
 
 {financial_evolution}
 \end{{center}}
-
-
-
-
-
 
 \end{{document}}

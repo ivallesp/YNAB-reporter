@@ -1,5 +1,6 @@
 import calendar
 import locale
+import math
 from datetime import datetime
 
 import matplotlib.pyplot as plt
@@ -10,6 +11,7 @@ import numpy as np
 from src.wrangling import calculate_daily_balances, get_ynab_dataset
 
 import matplotlib as mpl
+
 
 COLORS = [
     "da4450",
@@ -273,7 +275,7 @@ def generate_latex_report(year, month):
     with open("assets/template.tex", "r") as f:
         template = f.read()
 
-    title = f"Financial report – {MONTHS[month-1]} {year}"
+    title = f"Personal finance report – {MONTHS[month-1]} {year}"
 
     df_financial_snapshot = calculate_financial_snapshot(year=year, month=month)
     financial_snapshot = df_financial_snapshot.to_latex(
@@ -285,11 +287,23 @@ def generate_latex_report(year, month):
         index=False, float_format=float_format
     )
 
+    df_last_movements = df_financial_evolution.head(1)
+    df_last_movements = df_last_movements.drop(["Month", "Amount"], axis=1)
+    last_movements = df_last_movements.to_latex(index=False, float_format=float_format)
+
+    df_top_in, df_top_out = get_top_flows(year=year, month=month, n_rows=10)
+    top_inflows = df_top_in.to_latex(index=False, float_format=float_format)
+    top_outflows = df_top_out.to_latex(index=False, float_format=float_format)
+
     template = template.format(
         title=title,
         financial_snapshot=financial_snapshot,
+        last_movements=last_movements,
         financial_evolution=financial_evolution,
+        top_inflows=top_inflows,
+        top_outflows=top_outflows,
     )
+
     # + monthly inflows and outflows, with initial and final balance and savings
     # + biggest transactions
 
@@ -298,6 +312,9 @@ def generate_latex_report(year, month):
     # Set xlim
     fig, ax = generate_evolution_plot(year=year, month=month)
     fig.savefig("assets/evolution.eps")
+
+    fig, ax = generate_categories_detail_plot(year=year, month=month)
+    fig.savefig("assets/categories.eps")
 
     with open("assets/report.tex", "w") as f:
         f.write(template)
