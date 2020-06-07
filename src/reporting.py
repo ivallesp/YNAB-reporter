@@ -118,21 +118,26 @@ def generate_evolution_plot(year, month):
     histories = list(zip(*df.values.clip(0, None).tolist()))
     # Calculate the histories for every account
     yticks_freq = 5000  # Frequency of the y ticks
-    # Get the max value for the Y axis
-    top = yticks_freq * (df.values.sum(axis=1).max() / yticks_freq).round()
+    # Get the limits for the Y axis
+    top = yticks_freq * math.ceil(df.values.sum(axis=1).max() / yticks_freq)
+    bot = -top * 0.025
     # Generate a new figure
-    fig = plt.figure(figsize=(10, 2.5))
+    fig = plt.figure(figsize=(10, 2))
     ax = plt.gca()
     # Plot the histories
     ax.stackplot(df.index.tolist(), *histories, labels=df["amount"].columns)
+    # Add a horizontal line at zero
+    ax.axhline(0, color="k", linewidth=1)
     # Plot the legend
     ax.legend(loc="upper left", facecolor="white")
     # Add the grid on top the graph
     ax.set_axisbelow(False)
-    ax.grid(which="both", linestyle="--", linewidth=0.7)
+    ax.grid(which="both", color="#DDDDDD", linestyle="-", linewidth=0.7)
+    # Background to white
+    ax.set_facecolor((1, 1, 1))
     # Configure the axis
     ax.set_yticks(np.arange(0, top + 1, yticks_freq))
-    ax.set_ylim(0, top)
+    ax.set_ylim(None, top)
     years = mdates.YearLocator()
     months = mdates.MonthLocator()
     monthsFmt = mdates.DateFormatter("%b")
@@ -141,6 +146,7 @@ def generate_evolution_plot(year, month):
     ax.xaxis.set_minor_formatter(monthsFmt)
     ax.xaxis.set_major_locator(years)
     ax.xaxis.set_major_formatter(yearsFmt)
+
     # Make the layout tight (lower margins)
     fig.tight_layout()
     # Rotate 90 degrees the minor labels in the X axis
