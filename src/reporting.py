@@ -125,7 +125,7 @@ def generate_evolution_plot(year, month):
     top = yticks_freq * math.ceil(df.values.sum(axis=1).max() / yticks_freq)
     bot = -top * 0.025
     # Generate a new figure
-    fig = plt.figure(figsize=(10, 2))
+    fig = plt.figure(figsize=(10, 2.5))
     ax = plt.gca()
     # Plot the histories
     ax.stackplot(df.index.tolist(), *histories, labels=df["amount"].columns)
@@ -212,7 +212,7 @@ def generate_categories_detail_plot(year, month):
     plt.ylim(bot, top)
     # Make the layout tight (lower margins)
     fig.tight_layout()
-    ax.xaxis.set_tick_params(rotation=30)
+    ax.xaxis.set_tick_params(rotation=90)
     return fig, ax
 
 
