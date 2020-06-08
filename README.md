@@ -23,6 +23,11 @@ It might be useful to set up a crontab to run the system every month. In my case
 0 9 5 * *     cd ~/projects/ynab-reporter && .venv/bin/python main.py -m `date +\%-m --date="1 month ago"` -y `date +\%Y --date="1 month ago"` -e my.email@gmail.com my.partner.email@gmail.com
 ```
 
+## Example
+The following image shows how the report looks like. Notice that all the data shown in it has been randomly generated.
+
+![](assets/report-example.png)
+
 ## Contribution
 Pull requests and issues will be tackled upon availability.
 

@@ -10,6 +10,7 @@ logs/*
 # Exclude content in the logs folder
 assets/*
 !assets/template.tex
+!assets/report-example.png
 
 # Vscode folder
 .vscode
