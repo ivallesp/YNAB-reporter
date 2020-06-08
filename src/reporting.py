@@ -311,7 +311,7 @@ def generate_latex_report(year, month):
         suffix = ["st", "nd", "rd"][today.day % 10 - 1]
 
     today = f"{MONTHS[today.month]} {today.day}{suffix} {today.year}"
-    footnote = f"This report has been generated on {today}"
+    footnote = f"This report was generated in {today}"
 
     template = template.format(
         title=title,
