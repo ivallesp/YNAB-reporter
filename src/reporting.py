@@ -51,7 +51,7 @@ MONTHS = [
 
 def get_top_flows(year, month, n_rows):
     df = get_ynab_dataset()
-    df = df.loc[lambda d: (d.date.dt.month == month) & (d.date.dt.year == year)]
+    df = df.loc[lambda d: (d.date.dt.month == month) & (d.date.dt.year <= year)]
     df = df[df.transfer_transaction_id.isnull()]
     # Separate inflows and outflows
     df_in = df.loc[lambda d: d.amount >= 0]
@@ -105,7 +105,8 @@ def calculate_financial_snapshot(year, month):
 def generate_evolution_plot(year, month):
     df_ynab = get_ynab_dataset()
     df = calculate_daily_balances(df=df_ynab)
-    df = df.loc[(df.date.dt.year <= year) & (df.date.dt.month <= month)]
+    eom_day = calendar.monthrange(year, month)[1]
+    df = df.loc[df.date <= datetime(year, month, eom_day)]
     # Aggregate at account level
     df = df.groupby(["date", "account_name"]).amount.sum().reset_index()
     # Pivot the account dimension
@@ -159,7 +160,8 @@ def generate_evolution_plot(year, month):
 
 def generate_categories_detail_plot(year, month):
     df = get_ynab_dataset()
-    df = df.loc[(df.date.dt.year <= year) & (df.date.dt.month <= month)]
+    eom_day = calendar.monthrange(year, month)[1]
+    df = df.loc[df.date <= datetime(year, month, eom_day)]
     df = df[df.transfer_transaction_id.isnull()]
     df["month"] = df.date.dt.month
     df["year"] = df.date.dt.year
@@ -217,7 +219,8 @@ def generate_categories_detail_plot(year, month):
 def calculate_monthly_flows(year, month):
     # Load data
     df = get_ynab_dataset()
-    df = df.loc[(df.date.dt.year <= year) & (df.date.dt.month <= month)]
+    eom_day = calendar.monthrange(year, month)[1]
+    df = df.loc[df.date <= datetime(year, month, eom_day)]
     # Filter out the transfers
     df = df[df.transfer_transaction_id.isnull()]
     # Add month column
@@ -248,7 +251,8 @@ def calculate_financial_evolution(year, month):
     # Load data and calculate daily balances
     df_ynab = get_ynab_dataset()
     df = calculate_daily_balances(df=df_ynab)
-    df = df.loc[(df.date.dt.year <= year) & (df.date.dt.month <= month)]
+    eom_day = calendar.monthrange(year, month)[1]
+    df = df.loc[df.date <= datetime(year, month, eom_day)]
     # Get the end of month balances
     df = df[lambda d: d.date.dt.is_month_end]
     # Aggregate at date level
