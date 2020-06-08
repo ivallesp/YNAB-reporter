@@ -12,8 +12,16 @@ Follow the next steps to have the project running in your system:
 5. Create the virtual environment with `poetry install`.
 6. Make sure you have LaTeX installed in your system (or install it with `sudo apt-get install texlive-full`) with the needed dependencies.
 7. Create the `config/ynab.toml` file following the example in the same folder and fill-in your budget name and API key.
-8. Activate the environment with `source .venv/bin/activate`.
-9. Run `python main.py -y <report-year> -m <report-month>` to generate a report for the specified date.
+8. Do the same with the `config/email.toml` file. The example contained in this repository has the settings for gmail pre-filled in.
+9. Activate the environment with `source .venv/bin/activate`.
+10. Run `python main.py -y <report-year> -m <report-month>` to generate a report for the specified date.
+
+
+It might be useful to set up a crontab to run the system every month. In my case, I run it the 5th day of every month, for calculating the report corresponding with the previous month. The crontab entry is shown below as an example.
+
+```
+0 9 5 * *     cd ~/projects/ynab-reporter && .venv/bin/python main.py -m `date +\%-m --date="1 month ago"` -y `date +\%Y --date="1 month ago"` -e my.email@gmail.com my.partner.email@gmail.com
+```
 
 ## Contribution
 Pull requests and issues will be tackled upon availability.
