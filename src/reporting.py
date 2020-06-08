@@ -247,7 +247,7 @@ def calculate_monthly_flows(year, month):
     return df
 
 
-def calculate_financial_evolution(year, month):
+def calculate_financial_evolution(year, month, n_months):
     # Load data and calculate daily balances
     df_ynab = get_ynab_dataset()
     df = calculate_daily_balances(df=df_ynab)
@@ -270,6 +270,8 @@ def calculate_financial_evolution(year, month):
     df = df[["month", "inflow", "outflow", "savings", "amount"]]
     # Add fancy column names
     df.columns = ["Month", "Inflow", "Outflow", "Savings", "Amount"]
+    # Number of months to show
+    df = df.head(n_months)
     return df
 
 
@@ -286,7 +288,9 @@ def generate_latex_report(year, month):
         index=False, float_format=float_format
     )
 
-    df_financial_evolution = calculate_financial_evolution(year=year, month=month)
+    df_financial_evolution = calculate_financial_evolution(
+        year=year, month=month, n_months=12
+    )
     financial_evolution = df_financial_evolution.to_latex(
         index=False, float_format=float_format
     )
