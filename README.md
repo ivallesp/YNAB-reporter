@@ -1,4 +1,4 @@
-# N26 to YNAB automation bridge
+# YNAB reporter: a simple YNAB monthly reporting system
 This repository implements a small system for generating reports summarising You Need A Budged monthly movements and historical positions. The data is obtained using the YNAB API and the reports are generated using LaTeX.
 
 ## Getting started
