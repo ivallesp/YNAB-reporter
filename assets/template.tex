@@ -14,11 +14,11 @@
 % Title
 \maketitle
 \thispagestyle{{empty}}
-\vspace{{-50pt}}
+\vspace{{-5.5em}}
 
-\section*{{Summary of the month}}
+\section*{{\textbf{{\textsc{{Month summary}}}}}}\vspace{{-0.5em}}
 % Subsection: current position
-\subsection*{{\textsc{{Current position}}}}\vspace{{5pt}}
+\subsection*{{\textsc{{Current position}}}}
 \begin{{minipage}}[t]{{0.7\textwidth}}
 {financial_snapshot}
 \end{{minipage}}
@@ -30,17 +30,16 @@
 
 
 % Subsection: categories breakdown
-\subsection*{{\textsc{{Categories breakdown}}}}\vspace{{5pt}}
-
+\subsection*{{\textsc{{Categories breakdown}}}}
+\vspace{{-0.5em}}
 \begin{{center}}
 \includegraphics[width=1\linewidth]{{categories}}
 \end{{center}}
-
+\vspace{{-2em}}
 
 
 % Top Inflow and outflow transactions
-\vspace{{-2.5em}}
-\subsection*{{\textsc{{Top Inflow and Outflow transactions}}}}\vspace{{5pt}}
+\subsection*{{\textsc{{Top Inflow and Outflow transactions}}}}
 \begin{{minipage}}[t]{{0.5\textwidth}}
 {{\small
 {top_inflows}
@@ -56,20 +55,26 @@
 
 
 % Section: history
-\section*{{History}}
+\section*{{\textbf{{\textsc{{History}}}}}}\vspace{{-0.5em}}
 % Subsection: evolution of the balance
-\subsection*{{\textsc{{Balance evolution}}}}\vspace{{5pt}}
+\subsection*{{\textsc{{Balance evolution}}}}
 
 \begin{{center}}
+\vspace{{-0.5em}}
 \includegraphics[width=1\linewidth]{{evolution}}
 \end{{center}}
+\vspace{{-3.5em}}
 
 % Subsection: Balances
-\subsection*{{\textsc{{Balances}}}}\vspace{{5pt}}
+\subsection*{{\textsc{{Balances}}}}
 \begin{{center}}
-\setlength{{\tabcolsep}}{{20pt}}
+\setlength{{\tabcolsep}}{{30pt}}
 
 {financial_evolution}
 \end{{center}}
+
+\begin{{flushright}}
+{{\scriptsize\textit{{{footnote}}}}}
+\end{{flushright}}
 
 \end{{document}}

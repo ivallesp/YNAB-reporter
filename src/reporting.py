@@ -303,6 +303,16 @@ def generate_latex_report(year, month):
     top_inflows = df_top_in.to_latex(index=False, float_format=float_format)
     top_outflows = df_top_out.to_latex(index=False, float_format=float_format)
 
+    # Footnote
+    today = datetime.now()
+    if 4 <= today.day <= 20 or 24 <= today.day <= 30:
+        suffix = "th"
+    else:
+        suffix = ["st", "nd", "rd"][today.day % 10 - 1]
+
+    today = f"{MONTHS[today.month]} {today.day}{suffix} {today.year}"
+    footnote = f"This report has been generated on {today}"
+
     template = template.format(
         title=title,
         financial_snapshot=financial_snapshot,
@@ -310,6 +320,7 @@ def generate_latex_report(year, month):
         financial_evolution=financial_evolution,
         top_inflows=top_inflows,
         top_outflows=top_outflows,
+        footnote=footnote
     )
 
     # + monthly inflows and outflows, with initial and final balance and savings
