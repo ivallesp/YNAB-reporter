@@ -1,6 +1,7 @@
 import calendar
 import locale
 import math
+import os
 from datetime import datetime
 
 import matplotlib.pyplot as plt
@@ -278,7 +279,7 @@ def calculate_financial_evolution(year, month, n_months):
 def generate_latex_report(year, month):
     locale.setlocale(locale.LC_ALL, "en_us.utf-8")
     float_format = lambda x: locale.format("%.2f", x, grouping=True)
-    with open("assets/template.tex", "r") as f:
+    with open(os.path.join("assets", "template.tex"), "r") as f:
         template = f.read()
 
     title = f"Personal finance report – {MONTHS[month-1]} {year}"
@@ -330,10 +331,10 @@ def generate_latex_report(year, month):
     # Add grid
     # Set xlim
     fig, ax = generate_evolution_plot(year=year, month=month)
-    fig.savefig("assets/evolution.eps")
+    fig.savefig(os.path.join("assets", "evolution.eps"))
 
     fig, ax = generate_categories_detail_plot(year=year, month=month)
-    fig.savefig("assets/categories.eps")
+    fig.savefig(os.path.join("assets", "categories.eps"))
 
-    with open("assets/report.tex", "w") as f:
+    with open(os.path.join("assets", "report.tex"), "w") as f:
         f.write(template)
