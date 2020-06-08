@@ -1,5 +1,4 @@
 import calendar
-import locale
 import math
 import os
 from datetime import datetime
@@ -277,7 +276,7 @@ def calculate_financial_evolution(year, month, n_months):
 
 
 def generate_latex_report(year, month):
-    locale.setlocale(locale.LC_ALL, "en_us.utf-8")
+    # TODO: Add commas to separate thousands
     float_format = lambda x: locale.format("%.2f", x, grouping=True)
     with open(os.path.join("assets", "template.tex"), "r") as f:
         template = f.read()
