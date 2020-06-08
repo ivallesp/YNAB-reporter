@@ -320,7 +320,7 @@ def generate_latex_report(year, month):
         financial_evolution=financial_evolution,
         top_inflows=top_inflows,
         top_outflows=top_outflows,
-        footnote=footnote
+        footnote=footnote,
     )
 
     # + monthly inflows and outflows, with initial and final balance and savings
