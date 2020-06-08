@@ -35,7 +35,7 @@ if __name__ == "__main__":
         "-e",
         action="store",
         dest="recipients",
-        required=True,
+        required=False,
         nargs="+",
         help="Recipients to send the report to",
     )
