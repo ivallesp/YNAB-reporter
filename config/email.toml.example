@@ -1,0 +1,7 @@
+[email]
+address = "reporter@gmail.com"
+username = "my-username"
+password = "my_password"
+server = "smtp.gmail.com"
+port = 587
+use_tls = true
