@@ -60,7 +60,7 @@ if __name__ == "__main__":
         )
         send_mail(
             send_to=results.recipients,
-            subject=f"{month_name}-{results.year} finnancial report",
+            subject=f"{month_name}-{results.year} financial report",
             message=f"Report corresponding to {month_name} {results.year} attached.",
             files=[(report_path, report_name)],
         )
