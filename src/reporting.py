@@ -1,4 +1,17 @@
-f
+import calendar
+import math
+import os
+from datetime import datetime
+
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+import numpy as np
+
+from src.wrangling import calculate_daily_balances, get_ynab_dataset
+
+import matplotlib as mpl
+
 
 COLORS = [
     "da4450",
@@ -299,7 +312,7 @@ def generate_latex_report(year, month):
     else:
         suffix = ["st", "nd", "rd"][today.day % 10 - 1]
 
-    today = f"{MONTHS[today.month-1]} {today.day}{suffix} {today.year}"
+    today = f"{MONTHS[today.month]} {today.day}{suffix} {today.year}"
     footnote = f"This report was generated in {today}"
 
     template = template.format(
