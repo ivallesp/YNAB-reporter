@@ -47,6 +47,8 @@ def calculate_daily_balances(df):
     df_pks = cartesian_multiple(df[pks], pks)
     df_base = cartesian_pair(df_date, df_pks)
     df = df_base.merge(df[pks + ["date", "amount"]], how="left").fillna(0)
+    # Aggregate at the right level to remove duplicated transactions
+    df = df.groupby(pks + ["date"]).amount.sum().reset_index()
     df = df.sort_values(by="date")
     df = df.assign(
         amount=lambda d: d.groupby(pks).amount.transform(lambda x: x.cumsum())
