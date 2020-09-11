@@ -266,6 +266,8 @@ def calculate_financial_evolution(year, month, n_months):
     # Calculate flows
     df_flows = calculate_monthly_flows(year=year, month=month)
     df = df.merge(df_flows, how="left")
+    # Sort table
+    df = df.sort_values(by="date", ascending=False)
     # Filter and arrange columns
     df = df[["month", "inflow", "outflow", "savings", "amount"]]
     # Add fancy column names
