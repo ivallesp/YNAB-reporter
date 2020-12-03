@@ -14,10 +14,22 @@ from functools import lru_cache
 def get_ynab_dataset(min_date=None, max_date=None):
     ynab_cli = get_ynab_client()
     ynab_conf = load_ynab_config()["ynab"]
-    data = fetch_transactions(ynab_cli, ynab_conf["budget_name"])
-    df = pd.DataFrame(data)
+    categories_to_exclude = ynab_conf.get("categories_to_exclude", [])
+    if type(ynab_conf["budget_name"]) is list:
+        budget_names = ynab_conf["budget_name"]
+        rates = ynab_conf["currency_rate"]
+        assert len(budget_names) == len(rates)
+        df = []
+        for name, rate in zip(budget_names, rates):
+            data = fetch_transactions(ynab_cli, name)
+            df.append(pd.DataFrame(data).assign(amount=lambda d: d.amount * rate))
+        df = pd.concat(df, axis=0)
+    else:
+        data = fetch_transactions(ynab_cli, ynab_conf["budget_name"])
+        df = pd.DataFrame(data)
     df = df[lambda d: d.deleted == False]  # Remove the deleted transactions
     df = df[lambda d: d.approved == True]  # Remove the non-approved transactions
+    df["exclude"] = df.category_name.isin(categories_to_exclude)  # Mark
     df["date"] = pd.to_datetime(df.date, format="%Y-%m-%d")
     if min_date:
         df = df[lambda d: d.date >= min_date]

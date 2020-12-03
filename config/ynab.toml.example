@@ -1,3 +1,5 @@
 [ynab]
-budget_name = "test_budget_name"
+budget_name = ["test_budget_name_1", "test_budget_name_2", "test_budget_name_3"]
+currency_rate = [1.00, 1.00, 1.11]
 api_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+categories_to_exclude = ["GBP-EUR", "EUR-GBP"]

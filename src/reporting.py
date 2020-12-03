@@ -52,7 +52,9 @@ MONTHS = [
 def get_top_flows(year, month, n_rows):
     df = get_ynab_dataset()
     df = df.loc[lambda d: (d.date.dt.month == month) & (d.date.dt.year <= year)]
+    # Remove transfers and exclude categories
     df = df[df.transfer_transaction_id.isnull()]
+    df = df[df.exclude == False]
     # Separate inflows and outflows
     df_in = df.loc[lambda d: d.amount >= 0]
     df_out = df.loc[lambda d: d.amount < 0]
@@ -97,6 +99,8 @@ def calculate_financial_snapshot(year, month):
     df = pd.concat([df, df_total], axis=0)
     # Add fancy column names
     df.columns = ["Account", "Amount"]
+    # Filter out the accounts with amount 0
+    df = df[(df.Amount < -0.01) | (df.Amount > 0.01) | (df.Account == "Total")]
     # Transpose
     df = df.set_index("Account").transpose()
     return df
@@ -162,7 +166,9 @@ def generate_categories_detail_plot(year, month):
     df = get_ynab_dataset()
     eom_day = calendar.monthrange(year, month)[1]
     df = df.loc[df.date <= datetime(year, month, eom_day)]
+    # Filter transfers and exclude categories
     df = df[df.transfer_transaction_id.isnull()]
+    df = df[df.exclude == False]
     df["month"] = df.date.dt.month
     df["year"] = df.date.dt.year
     df = df.groupby(["year", "month", "category_name"]).amount.sum()
@@ -223,6 +229,7 @@ def calculate_monthly_flows(year, month):
     df = df.loc[df.date <= datetime(year, month, eom_day)]
     # Filter out the transfers
     df = df[df.transfer_transaction_id.isnull()]
+    df = df[df.exclude == False]
     # Add month column
     month_col = pd.Series(np.array(MONTHS)[df.date.dt.month.values - 1], index=df.index)
     month_col = month_col + " " + df.date.dt.year.astype(str)
@@ -283,7 +290,7 @@ def generate_latex_report(year, month):
     with open(os.path.join("assets", "template.tex"), "r") as f:
         template = f.read()
 
-    title = f"Personal finance report – {MONTHS[month-1]} {year}"
+    title = f"Personal unified finance report – {MONTHS[month-1]} {year}"
 
     df_financial_snapshot = calculate_financial_snapshot(year=year, month=month)
     financial_snapshot = df_financial_snapshot.to_latex(
