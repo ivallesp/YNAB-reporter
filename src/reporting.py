@@ -1,13 +1,13 @@
 import calendar
 import math
 import os
+import sys
 from datetime import datetime
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 import numpy as np
-
 from src.wrangling import calculate_daily_balances, get_ynab_dataset
 
 import matplotlib as mpl
@@ -281,6 +281,8 @@ def calculate_financial_evolution(year, month, n_months):
     df.columns = ["Month", "Inflow", "Outflow", "Savings", "Amount"]
     # Number of months to show
     df = df.head(n_months)
+    # Add YoY
+    df["YoY"] = df.Amount - df.Amount.shift(-11)
     return df
 
 
@@ -302,7 +304,7 @@ def generate_latex_report(year, month):
     )
     financial_evolution = df_financial_evolution.to_latex(
         index=False, float_format=float_format
-    )
+    ).replace("NaN", "-")
 
     df_last_movements = df_financial_evolution.head(1)
     df_last_movements = df_last_movements.drop(["Month", "Amount"], axis=1)
