@@ -174,7 +174,8 @@ def generate_categories_detail_plot(year, month):
     df = df.groupby(["year", "month", "category_name"]).amount.sum()
     df = df.sort_values()[year, month]
     # Remove the income category. We want to analyse the rest
-    df = df.drop("Immediate Income SubCategory")
+    if "Immediate Income SubCategory" in df.index:
+        df = df.drop("Immediate Income SubCategory")
     # Separate the category names from the values
     cats = df.index.tolist()
     vals = df.values
