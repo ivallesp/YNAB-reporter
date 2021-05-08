@@ -1,4 +1,5 @@
 import calendar
+import codecs
 import math
 import os
 import sys
@@ -347,5 +348,5 @@ def generate_latex_report(year, month):
     fig, ax = generate_categories_detail_plot(year=year, month=month)
     fig.savefig(os.path.join("assets", "categories.eps"))
 
-    with open(os.path.join("assets", "report.tex"), "w") as f:
+    with codecs.open(os.path.join("assets", "report.tex"), "w", "utf-8") as f:
         f.write(template)
