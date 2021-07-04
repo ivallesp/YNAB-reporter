@@ -2,6 +2,10 @@
 This repository implements a small system for generating reports summarising You Need A Budged monthly movements and historical positions. The data is obtained using the YNAB API and the reports are generated using LaTeX.
 
 ## Changelog
+__June 4th, 2021__
+- Feat: add example Dockerfile
+- Feat: add YoY column
+- Several minor bugfixes
 __December 3rd, 2020__
 - Feat: add multi-budget functionality, with possibility of different currencies
 - Feat: add possibility to exclude categories of the calculations
