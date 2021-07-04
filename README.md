@@ -6,6 +6,7 @@ __June 4th, 2021__
 - Feat: add example Dockerfile
 - Feat: add YoY column
 - Several minor bugfixes
+
 __December 3rd, 2020__
 - Feat: add multi-budget functionality, with possibility of different currencies
 - Feat: add possibility to exclude categories of the calculations
